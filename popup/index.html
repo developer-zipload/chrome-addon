@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="success hidden">Values Saved Successfully!</div>
+    <fieldset>
+      <legend>Settings</legend>
+      <div
+        class="input"
+        title="Posts content will be matched against these words"
+      >
+        <div id="filter" contenteditable="" class="divInput"></div>
+        <label for="filter">Filter(seperate using commas)</label>
+        <p class="error">Some Test Error</p>
+      </div>
+      <div class="input">
+        <div id="fdc" contenteditable="" class="divInput"></div>
+        <label for="fdc">Facebook Default Comment</label>
+      </div>
+      <div class="input">
+        <div id="wdc" contenteditable="" class="divInput"></div>
+        <label for="wdc">Whatsapp Default Message</label>
+      </div>
+      <div class="checkbox">
+        <label for="ru">Remove Unwanted Post(s)/Chat(s)?</label>
+        <input type="checkbox" id="ru" />
+      </div>
+    </fieldset>
+    <button class="save">Save</button>
+    <script src="script.js"></script>
+  </body>
+</html>

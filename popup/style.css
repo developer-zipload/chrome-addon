@@ -1,0 +1,128 @@
+:root {
+  --primaryColor: #6200ee;
+}
+
+body {
+  font-family: sans-serif;
+}
+
+fieldset {
+  border: 1px solid var(--primaryColor);
+  border-radius: 5px;
+}
+
+legend {
+  color: var(--primaryColor);
+  font-size: 1.5rem;
+}
+
+.input {
+  position: relative;
+  max-width: 400px;
+  width: 95vw;
+  z-index: 1;
+  margin: 15px 0;
+}
+
+.input input,
+.input textarea,
+.input .divInput {
+  position: relative;
+  width: 97.5%;
+  border: 1px solid var(--primaryColor);
+  color: var(--primaryColor);
+  z-index: 1;
+  padding: 10px 0 10px 10px;
+  border-radius: 2.5px;
+  font-size: 1rem;
+  font-family: sans-serif;
+  resize: none;
+}
+
+.input .divInput {
+  height: 50px;
+}
+
+.input label {
+  position: absolute;
+  font-size: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--primaryColor);
+  margin-left: 10px;
+  z-index: 2;
+  pointer-events: none;
+  background-color: white;
+  transition: 0.15s linear;
+}
+
+.input textarea ~ label {
+  top: 20px;
+}
+
+.input .divInput ~ label {
+  top: 20px;
+}
+
+.input label.float {
+  top: 0;
+  font-size: 0.85rem;
+  padding: 0 2.5px;
+}
+
+button {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: var(--primaryColor);
+  font-family: sans-serif;
+  color: #fff;
+  font-size: 1rem;
+  border: none;
+  margin-top: 10px;
+  position: relative;
+  left: 50%;
+  transform: translate(-50%);
+}
+
+.success {
+  transition: 0.1s linear;
+  opacity: 1;
+  background-color: green;
+  color: white;
+  text-align: center;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.success.hidden {
+  opacity: 0;
+}
+
+.checkbox {
+  color: var(--primaryColor);
+  text-align: center;
+  font-size: 1rem;
+}
+
+.input .error {
+  display: none;
+}
+
+.input.error input,
+.input.error textarea,
+.input.error .divInput {
+  border: 1px solid red;
+  margin-bottom: 0;
+  color: red;
+}
+
+.input.error label {
+  color: red;
+}
+
+.input.error p.error {
+  display: block;
+  font-size: 0.8rem;
+  color: red;
+  margin-top: 0;
+}

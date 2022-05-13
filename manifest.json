@@ -1,0 +1,35 @@
+{
+  "name": "Zipload Scrapper",
+  "description": "Scrape Sales data from Facebook and WhatsApp",
+  "version": "1.0",
+  "manifest_version": 3,
+  "content_scripts": [
+    {
+      "matches": ["*://*.facebook.com/groups/*"],
+      "js": ["storage.js", "fb.js"],
+      "css": ["fb.css"]
+    },
+    {
+      "matches": ["*://web.whatsapp.com/*"],
+      "js": ["storage.js", "whatsapp.js"],
+      "css": ["whatsapp.css"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/dark_download.svg", "icons/light_download.svg"],
+      "matches": ["*://*.facebook.com/*", "*://web.whatsapp.com/*"]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_icon": "logo.png",
+    "default_popup": "popup/index.html"
+  },
+  "permissions": ["storage"]
+}
