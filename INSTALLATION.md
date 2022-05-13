@@ -3,6 +3,7 @@
 Below are the steps to install the `Zipload Scrapper` extension :-
 
 1.) Goto [chrome://extensions](chrome://extensions),
+
 2.) Turn on developer mode
 ![Image showing developer mode](readme_assets/installation/step_2.png)
 3.) Once developer mode is turned on click on the `Load unpacked` option.
