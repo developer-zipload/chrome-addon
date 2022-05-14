@@ -2,37 +2,62 @@ let filter = null;
 let default_comment = "";
 let remove_unwanted = "0";
 let iconURL = chrome.runtime.getURL("icons/dark_download.svg");
+let pdIiconURL = chrome.runtime.getURL("icons/pd_dark_download.svg");
 
-function createFAB() {
-  const fab = document.createElement("div");
-  fab.classList.add("fb-scrapper-fab");
+function createDownloadFAB() {
+  const downloadFab = document.createElement("div");
+  downloadFab.classList.add("fb-scrapper-fab");
 
   const fabIcon = document.createElement("div");
   fabIcon.classList.add("fb-scrapper-fab-icon");
 
   fabIcon.style.backgroundImage = "url(" + iconURL + ")";
 
-  fab.appendChild(fabIcon);
+  downloadFab.appendChild(fabIcon);
 
-  fab.title = "Click to download data";
+  downloadFab.title = "Click to download data";
 
-  fab.classList.add("hidden");
+  downloadFab.classList.add("hidden");
 
   const toggleVisibility = (visible) => {
     if (visible) {
-      fab.classList.remove("hidden");
+      downloadFab.classList.remove("hidden");
     } else {
-      fab.classList.add("hidden");
+      downloadFab.classList.add("hidden");
     }
   };
-  return { fab, toggleVisibility };
+  return { downloadFab, toggleVisibility };
+}
+
+function createPhoneDownloadFab() {
+  const phoneDownloadFab = document.createElement("div");
+  phoneDownloadFab.classList.add("fb-scrapper-fab-pd");
+
+  const fabIcon = document.createElement("div");
+  fabIcon.classList.add("fb-scrapper-fab-icon");
+
+  fabIcon.style.backgroundImage = "url(" + pdIiconURL + ")";
+
+  phoneDownloadFab.appendChild(fabIcon);
+
+  phoneDownloadFab.title = "Click to download all phone numbers";
+
+  phoneDownloadFab.classList.add("hidden");
+
+  const togglePDVisibility = (visible) => {
+    if (visible) {
+      phoneDownloadFab.classList.remove("hidden");
+    } else {
+      phoneDownloadFab.classList.add("hidden");
+    }
+  };
+  return { phoneDownloadFab, togglePDVisibility };
 }
 
 let loader = null;
 
-function createLoader() {
+function createLoader(msg) {
   let loading = document.querySelector(".fb-scrapper-loader");
-  console.log(loading);
   if (!loading) {
     loading = document.createElement("div");
     loading.classList.add("fb-scrapper-loading");
@@ -49,7 +74,7 @@ function createLoader() {
   const opacity = document.createElement("div");
   opacity.classList.add("fb-scrapper-loading-opacity");
 
-  content.innerText = "Scraping...";
+  content.innerText = msg || "Scraping...";
 
   loading.appendChild(content);
   loading.appendChild(opacity);
@@ -57,9 +82,9 @@ function createLoader() {
   loader = loading;
 }
 
-function showLoading() {
+function showLoading(msg = null) {
   if (loader === null) {
-    createLoader();
+    createLoader(msg);
   }
 
   loader.classList.remove("hide");
@@ -91,6 +116,21 @@ function download() {
       "," +
       link +
       "\n";
+    if (temp.comment.length > 0) {
+      temp.comment.forEach((e) => {
+        let phone_numbers = e.comment.replace(/(\s|\n)/g);
+        phone_numbers = phone_numbers.match(/\d{10}/g);
+        final_data +=
+          e.by +
+          ',"' +
+          e.comment +
+          '",' +
+          ((phone_numbers && phone_numbers.join(" ")) || "") +
+          "," +
+          link +
+          "\n";
+      });
+    }
   }
 
   const link = document.createElement("a");
@@ -106,6 +146,15 @@ function download() {
 
 let logged_in = true;
 
+function highlightPhone(container) {
+  container.innerHTML = container.innerHTML
+    .replace(/([\s\>\<])+(\d{1,10})+\s+(\d{1,10})+([\s\>\<])/g, "$1$2$3$4")
+    .replace(
+      /([\s\n\>\<])+(\d{10})+([\>\<\s\n])/g,
+      '$1<span class="highlight_phone">$2</span>$3'
+    );
+}
+
 const update_elems = (fab_visibility) => () => {
   if (!logged_in) {
     fab_visibility(false);
@@ -114,18 +163,54 @@ const update_elems = (fab_visibility) => () => {
   let elems = document.querySelectorAll(
     "div.du4w35lb.k4urcfbm.l9j0dhe7.sjgh65i0"
   );
+
   final = [];
   elems.forEach((e, i) => {
     let data = e.innerText;
-    const see_more = e.querySelector(
+    let see_more = e.querySelector(
       ".rq0escxv.l9j0dhe7.du4w35lb.sbcfpzgs > div > div:nth-child(2) > div > div:nth-child(3) div.lrazzd5p[role=button]"
     );
+    const have_see_more = see_more !== null;
     if (see_more) {
       if (see_more.innerText.toLowerCase().replace(/\s/g, "") === "seemore") {
         see_more.click();
       }
     }
     let comment = e.querySelector("div.oo9gr5id[contenteditable]");
+    const comments = e.querySelectorAll(
+      ".rq0escxv.l9j0dhe7.du4w35lb.sbcfpzgs > div > div:nth-child(2) > div > div:nth-child(4) > div > div > div:nth-child(2) > ul > li"
+    );
+    let comments_data = [];
+
+    if (comments) {
+      comments.forEach((c) => {
+        let cmnt = c.querySelector(
+          "div > div:nth-child(1) > div:nth-child(2) > div > div > div > div > div >div > div"
+        );
+        let cmnt_by = c.querySelector(
+          "div > div:nth-child(1) > div:nth-child(2) > div > div > div > div > div >div > span"
+        )?.innerText;
+
+        let cmnt_see_more = cmnt?.querySelector(
+          "div > div:nth-child(1) > div:nth-child(2) > span div[role=button]"
+        );
+
+        if (cmnt_see_more) {
+          cmnt_see_more.click();
+        }
+
+        cmnt = cmnt?.innerText;
+
+        if (cmnt?.match(filter)) {
+          c.classList.add("highlight_comment");
+          comments_data.push({
+            comment: cmnt,
+            by: cmnt_by,
+          });
+        }
+      });
+    }
+
     const comment_btn = e.querySelector(
       ".rq0escxv.l9j0dhe7.du4w35lb.sbcfpzgs > div > div:nth-child(2) > div > div:nth-child(4) > div > div > div > div > div:nth-child(2) > div > div:nth-child(2)"
     );
@@ -158,7 +243,7 @@ const update_elems = (fab_visibility) => () => {
         let link = e.querySelectorAll("a")[3].href.split("?")[0];
         data = e.querySelector(
           ".rq0escxv.l9j0dhe7.du4w35lb.sbcfpzgs > div > div:nth-child(2) > div > div:nth-child(3)"
-        ).innerText;
+        );
         let name = e.querySelector(
           ".rq0escxv.l9j0dhe7.du4w35lb.sbcfpzgs > div > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(1) > span > h2"
         ).innerText;
@@ -170,14 +255,34 @@ const update_elems = (fab_visibility) => () => {
         name = name.split("is")[0];
         name = name.split(/\s$/)[0];
 
-        let phone_numbers = data.replace(/(\s|\n)/g);
+        let phone_numbers = data.innerText.replace(/(\s|\n)/g);
         phone_numbers = phone_numbers.match(/\d{10}/g);
+
+        if (!data.querySelector(".highlight_phone") && !have_see_more) {
+          highlightPhone(data);
+        } else if (have_see_more) {
+          let k = setInterval(() => {
+            if (!see_more) {
+              highlightPhone(
+                e.querySelector(
+                  ".rq0escxv.l9j0dhe7.du4w35lb.sbcfpzgs > div > div:nth-child(2) > div > div:nth-child(3)"
+                )
+              );
+              clearInterval(k);
+            }
+            see_more = e.querySelector(
+              ".rq0escxv.l9j0dhe7.du4w35lb.sbcfpzgs > div > div:nth-child(2) > div > div:nth-child(3) div.lrazzd5p[role=button]"
+            );
+          }, 100);
+        }
+
+        data = data.innerText;
 
         if (phone_numbers) {
           phone_numbers = phone_numbers.join(" ");
         }
 
-        all_data[link] = { data, name, phone_numbers };
+        all_data[link] = { data, name, phone_numbers, comment: comments_data };
       } catch (err) {
         alert(
           "Looks like you are not logged in to facebook, please login to continue."
@@ -199,6 +304,38 @@ const update_elems = (fab_visibility) => () => {
     fab_visibility(false);
   }
 };
+
+function downloadPhoneNumbers() {
+  let data = document.querySelector("div[role=feed]");
+
+  if (!data) return;
+
+  data = data.innerText
+    .replace(/(\d{1,10})+\s+(\d{1,10})/g, "$1$2")
+    .match(/\d{10}/g);
+
+  if (data?.length === 0) return;
+
+  showLoading("Extracting phone numbers...");
+
+  let final_data = "Phone\n";
+
+  data.forEach((e) => {
+    final_data += e + "\n";
+  });
+
+  const link = document.createElement("a");
+  data = new Blob([final_data], { type: "text/plain" });
+  link.href = URL.createObjectURL(data);
+  link.style.display = "none";
+  link.target = "_blank";
+  link.download = "fb-phone-data.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  hideLoading();
+}
 
 function onload(callback, data) {
   callback(data);
@@ -237,12 +374,16 @@ function init(data) {
   }
 
   const body = document.querySelector("body");
-  const { fab, toggleVisibility } = createFAB();
-  body.appendChild(fab);
+  const { downloadFab, toggleVisibility } = createDownloadFAB();
+  const { phoneDownloadFab, togglePDVisibility } = createPhoneDownloadFab();
+  body.appendChild(downloadFab);
+  body.appendChild(phoneDownloadFab);
 
   window.onscroll = update_elems(toggleVisibility);
 
-  fab.onclick = download;
+  downloadFab.onclick = download;
+
+  phoneDownloadFab.onclick = downloadPhoneNumbers;
 }
 
 storage.get("settings", (data) => {

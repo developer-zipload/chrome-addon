@@ -11,7 +11,7 @@ Pressing download button will download a csv file in your system, which contains
 
 ## Whatsapp
 
-Open any whatsapp chat, start scrolling and the extension will start highlight relevant chats, there will be a floating download button on the bottom-right of the screen, for reference look at the image below.
+Open any whatsapp chat, start scrolling and the extension will start highlighting relevant chats, there will be a floating download button on the bottom-right of the screen, for reference look at the image below.
 ![Reference Image 2](/readme_assets/how_to_use/2.png)
 
 Pressing download button will download a csv file in your system, which contains following information :- `Name, Phone, Content`.

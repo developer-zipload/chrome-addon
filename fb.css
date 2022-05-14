@@ -1,7 +1,8 @@
-.fb-scrapper-fab {
+.fb-scrapper-fab,
+.fb-scrapper-fab-pd {
   position: fixed;
   right: 12.5px;
-  bottom: 100px;
+  bottom: 147px;
   background-color: #fff;
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
   padding: 10px;
@@ -14,12 +15,17 @@
   justify-content: center;
 }
 
+.fb-scrapper-fab-pd {
+  bottom: 75px;
+}
+
 .fb-scrapper-fab.hidden {
   opacity: 0;
   pointer-events: none;
 }
 
-.fb-scrapper-fab .fb-scrapper-fab-icon {
+.fb-scrapper-fab .fb-scrapper-fab-icon,
+.fb-scrapper-fab-pd .fb-scrapper-fab-icon {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -36,6 +42,9 @@
   bottom: 0;
   z-index: 99999;
   cursor: progress;
+  opacity: 1;
+  pointer-events: auto;
+  transition: 0.25s linear;
 }
 
 .fb-scrapper-loading .fb-scrapper-loading-content {
@@ -64,4 +73,17 @@
 
 .highlight {
   border: 1px solid #ff0000;
+}
+
+.highlight_comment {
+  border: 1px solid blue;
+}
+
+.highlight_phone {
+  color: red;
+}
+
+.fb-scrapper-loading.hide {
+  opacity: 0;
+  pointer-events: none;
 }

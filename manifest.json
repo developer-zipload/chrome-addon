@@ -17,7 +17,11 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["icons/dark_download.svg", "icons/light_download.svg"],
+      "resources": [
+        "icons/pd_dark_download.svg",
+        "icons/dark_download.svg",
+        "icons/light_download.svg"
+      ],
       "matches": ["*://*.facebook.com/*", "*://web.whatsapp.com/*"]
     }
   ],
