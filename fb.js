@@ -244,16 +244,18 @@ const update_elems = (fab_visibility) => () => {
         data = e.querySelector(
           ".rq0escxv.l9j0dhe7.du4w35lb.sbcfpzgs > div > div:nth-child(2) > div > div:nth-child(3)"
         );
-        let name = e.querySelector(
-          ".rq0escxv.l9j0dhe7.du4w35lb.sbcfpzgs > div > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(1) > span > h2"
-        ).innerText;
-        name = name.split("with")[0];
-        name = name.split("from")[0];
-        name = name.split("on")[0];
-        name = name.split("at")[0];
-        name = name.split("shared")[0];
-        name = name.split("is")[0];
-        name = name.split(/\s$/)[0];
+        let name = e.querySelector(".knvmm38d")?.innerText;
+
+        if (name) {
+          name = name.split("with")[0];
+          name = name.split("from")[0];
+          name = name.split("on")[0];
+          name = name.split("shared")[0];
+          name = name.split("is")[0];
+          name = name.split(/\s$/)[0];
+        } else {
+          name = "";
+        }
 
         let phone_numbers = data.innerText.replace(/(\s|\n)/g);
         phone_numbers = phone_numbers.match(/\d{10}/g);
