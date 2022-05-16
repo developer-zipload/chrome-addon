@@ -247,14 +247,15 @@ const update_elems = (fab_visibility) => () => {
         let name = e.querySelector(".knvmm38d")?.innerText;
 
         if (name) {
-          name = name.split("with")[0];
-          name = name.split("from")[0];
-          name = name.split("on")[0];
-          name = name.split("shared")[0];
-          name = name.split("is")[0];
+          name = name.split(/\s+(with)/g)[0];
+          name = name.split(/\s+(from)/g)[0];
+          name = name.split(/\s+(on)/g)[0];
+          name = name.split(/\s+(at)/g)[0];
+          name = name.split(/\s+(shared)/g)[0];
+          name = name.split(/\s+(is)/g)[0];
           name = name.split(/\s$/)[0];
         } else {
-          name = "";
+          name = "-";
         }
 
         let phone_numbers = data.innerText.replace(/(\s|\n)/g);
